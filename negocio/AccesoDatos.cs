@@ -60,6 +60,15 @@ namespace negocio
             
         }
 
+        public void setearParametro(string nombre, object valor)
+        {
+            //ejemplo de como funciona:
+            //comando.Parameters.AddWithValue("@idTipo", 3);
+
+            //
+            comando.Parameters.AddWithValue(nombre, valor);
+        }
+
         public void cerrarConexion()
         {
             if (lector != null)
