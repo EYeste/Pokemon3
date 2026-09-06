@@ -9,6 +9,7 @@ namespace dominio
 {
     public class Pokemon
     {
+        public int Id { get; set; }
         [DisplayName("Número")]
         public int Numero {  get; set; }
         public string Nombre { get; set; }
