@@ -29,8 +29,11 @@ namespace ejemplos_ado_net
 
         private void dgvPokemons_SelectionChanged(object sender, EventArgs e)
         {
+            if(dgvPokemons.CurrentRow != null)
+            {
             Pokemon seleccionado = (Pokemon)dgvPokemons.CurrentRow.DataBoundItem;
             cargarImagen(seleccionado.UrlImagen);
+            }
         }
 
         private void cargar()
@@ -40,8 +43,7 @@ namespace ejemplos_ado_net
             {
                 listaPokemon = negocio.listar();
                 dgvPokemons.DataSource = listaPokemon;
-                dgvPokemons.Columns["UrlImagen"].Visible = false;
-                dgvPokemons.Columns["Id"].Visible = false;
+                ocultarColumnas();
                 cargarImagen(listaPokemon[0].UrlImagen);
 
             }
@@ -50,6 +52,12 @@ namespace ejemplos_ado_net
 
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        private void ocultarColumnas()
+        {
+            dgvPokemons.Columns["UrlImagen"].Visible = false;
+            dgvPokemons.Columns["Id"].Visible = false;
         }
 
         private void cargarImagen(string imagen)
@@ -118,5 +126,37 @@ namespace ejemplos_ado_net
             }
         }
 
+        private void btnFiltro_Click(object sender, EventArgs e)
+        {
+            
+
+        }
+
+        private void txtFiltro_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            
+        }
+
+        private void txtFiltro_TextChanged(object sender, EventArgs e)
+        {
+            List<Pokemon> listaFiltrada;
+
+            //Con esto busca exactamente el mismo nombre diferenciando mayusculas y minusculas
+            //listaFiltrada = listaPokemon.FindAll(x => x.Nombre == txtFiltro.Text);
+
+            string filtro = txtFiltro.Text;
+            if (filtro != "")
+            {
+                listaFiltrada = listaPokemon.FindAll(x => x.Nombre.ToUpper().Contains(filtro.ToUpper()) || x.Tipo.Descripcion.ToUpper().Contains(filtro.ToUpper()));
+            }
+            else
+            {
+                listaFiltrada = listaPokemon;
+            }
+
+            dgvPokemons.DataSource = null;
+            dgvPokemons.DataSource = listaFiltrada;
+            ocultarColumnas();
+        }
     }
 }
