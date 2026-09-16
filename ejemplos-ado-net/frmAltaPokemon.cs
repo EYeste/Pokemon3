@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using negocio;
+using System.IO;
+using System.Configuration;
 
 
 namespace ejemplos_ado_net
@@ -16,6 +18,7 @@ namespace ejemplos_ado_net
     public partial class frmAltaPokemon : Form
     {
         private Pokemon pokemon = null;
+        private OpenFileDialog archivo = null;
         public frmAltaPokemon()
         {
             InitializeComponent();
@@ -61,6 +64,11 @@ namespace ejemplos_ado_net
                 MessageBox.Show("Agregado exitosamente");
 
                 }
+
+                //Guardo imagen si la levanto localmente
+                if(archivo != null && !(txtUrlImagen.Text.ToUpper().Contains("HTTP")))
+                   File.Copy(archivo.FileName, ConfigurationManager.AppSettings["images-folder"] + archivo.SafeFileName);
+                
 
                 Close();
 
@@ -119,6 +127,23 @@ namespace ejemplos_ado_net
 
                 pbxPokemon.Load("https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png");
             }
+        }
+
+        private void btnAgregarImagen_Click(object sender, EventArgs e)
+        {
+            archivo = new OpenFileDialog();
+            archivo.Filter = "JPG|*.jpg;|PNG|*.png";
+           
+            if (archivo.ShowDialog() == DialogResult.OK)
+            {
+                txtUrlImagen.Text = archivo.FileName;
+                cargarImagen(archivo.FileName);
+
+                //Guardo la imagen
+                //File.Copy(archivo.FileName, ConfigurationManager.AppSettings["images-folder"] + archivo.SafeFileName);
+
+            }
+            
         }
     }
 }
