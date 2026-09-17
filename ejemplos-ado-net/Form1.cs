@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -131,11 +132,53 @@ namespace ejemplos_ado_net
             }
         }
 
+        private bool validarFiltro()
+        {
+            if (cboCampo.SelectedIndex < 0)
+            {
+                MessageBox.Show("Por favor, seleccione el campo para filtrar");
+                return true;
+            }
+            if (cboCriterio.SelectedIndex < 0)
+            {
+                MessageBox.Show("Por favor, seleccione el criterio para filtrar");
+                return true;
+            }
+            if(cboCampo.SelectedItem.ToString() == "Número")
+            {
+                if (string.IsNullOrEmpty(txtFiltroAvanzado.Text))
+                {
+                    MessageBox.Show("Debe ingresar un valor");
+                    return true;
+                }
+                if (!(soloNumeros(txtFiltroAvanzado.Text)))
+                {
+                    MessageBox.Show("Solo se pueden ingresar números");
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+        private bool soloNumeros(string cadena)
+        {
+            foreach (char caracter in cadena)
+            {
+                if (!(char.IsNumber(caracter)))
+                    return false;                                
+            }
+            return true;
+        }
+
         private void btnFiltro_Click(object sender, EventArgs e)
         {
             PokemonNegocio negocio = new PokemonNegocio();
             try
             {
+                if (validarFiltro())
+                    return;
+                
                 string campo = cboCampo.SelectedItem.ToString();
                 string criterio = cboCriterio.SelectedItem.ToString();
                 string filtro = txtFiltroAvanzado.Text;
